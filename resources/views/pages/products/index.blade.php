@@ -2,148 +2,84 @@
 
 @section('title', 'Products')
 
-@push('style')
-    <!-- CSS Libraries -->
-    <link rel="stylesheet" href="{{ asset('library/selectric/public/selectric.css') }}">
-@endpush
-
 @section('main')
-    <div class="main-content">
-        <section class="section">
-            <div class="section-header">
-                <h1>Products</h1>
-                <div class="section-header-button">
-                    <a href="{{ route('products.create') }}" class="btn btn-primary">Add New</a>
-                </div>
-                <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                    <div class="breadcrumb-item"><a href="#">Products</a></div>
-                    <div class="breadcrumb-item">All Products</div>
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa fa-exclamation-circle me-2"></i>
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    <div class="container-fluid pt-4 px-4">
+        <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="/">Dashboard</a></div>
+            <div class="breadcrumb-item"><a href="{{ route('products.index') }}">Products</a></div>
+            <div class="breadcrumb-item">Product List</div>
+        </div>
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="bg-secondary rounded h-100 p-4">
+                    <h6 class="mb-4">Product List <button onclick="window.location='{{ route('products.create') }}'"
+                            class="btn btn-outline-primary m-2">
+                            <i class="fas fa-plus me-2"></i>Add New Product
+                        </button></h6>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="text-white">
+                                    <th scope="col">Product Image</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Stock</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($products as $product)
+                                    <tr>
+                                        <td>
+                                            @if ($product->image)
+                                                <img alt="image" src="{{ asset('storage/products/' . $product->image) }}"
+                                                    class="img-thumbnail rounded" width="35" data-toggle="tooltip"
+                                                    title="{{ $product->name }}">
+                                            @else
+                                                <img alt="image" src="{{ asset('img/placeholder.jpeg') }}"
+                                                    class="img-thumbnail rounded" width="35" data-toggle="tooltip"
+                                                    title="{{ $product->name }}">
+                                            @endif
+                                        </td>
+                                        <td><a
+                                                href="{{ route('products.show', $product->id) }}">{{ Str::limit($product->name, 30, ' (...)') }}</a>
+                                        </td>
+                                        <td>{{ ucfirst($product->category) }}</td>
+                                        <td>{{ $product->stock }}</td>
+                                        <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
+                                        <td>
+                                            <a href='{{ route('products.edit', $product->id) }}'
+                                                class="btn btn-square btn-outline-info m-2">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href='#'
+                                                onclick="event.preventDefault(); if (confirm('Are you sure?')) document.getElementById('delete-product-{{ $product->id }}').submit()"
+                                                class="btn btn-square btn-outline-danger m-2">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                                class="d-none" id="delete-product-{{ $product->id }}">
+                                                @csrf
+                                                @method('DELETE')
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    {{ $products->withQueryString()->links() }}
                 </div>
             </div>
-            <div class="section-body">
-                <h2 class="section-title">Products</h2>
-                <p class="section-lead">
-                    You can manage all products, such as editing, deleting and more.
-                </p>
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card mb-0">
-                            <div class="card-body">
-                                <ul class="nav nav-pills">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" href="#">All <span
-                                                class="badge badge-white">{{ $allProducts }}</span></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">Food
-                                            <span class="badge badge-primary">{{ $foodProducts }}</span></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">Drink
-                                            <span class="badge badge-primary">{{ $drinkProducts }}</span></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">Snack
-                                            <span class="badge badge-primary">{{ $snackProducts }}</span></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible show fade">
-                        <div class="alert-body">
-                            <button class="close" data-dismiss="alert">
-                                <span>&times;</span>
-                            </button>
-                            {{ session('success') }}
-                        </div>
-                    </div>
-                @endif
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>All Products</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="float-right">
-                                    <form method="GET" action={{ route('products.index') }}>
-                                        <div class="input-group">
-                                            <input type="text" value="{{ old('keyword') }}" class="form-control"
-                                                placeholder="Search" name="keyword">
-
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <div class="clearfix mb-3"></div>
-
-                                <div class="table-responsive">
-                                    <table class="table-striped table">
-                                        <tr>
-                                            <th>Product Image</th>
-                                            <th>Name</th>
-                                            <th>Category</th>
-                                            <th>Stock</th>
-                                            <th>Price</th>
-                                        </tr>
-                                        @foreach ($products as $product)
-                                            <tr>
-                                                <td>
-                                                    <img alt="image" src="{{ $product->image }}" class="rounded"
-                                                        width="35" data-toggle="tooltip" title="{{ $product->name }}">
-                                                </td>
-                                                <td>{{ Str::limit($product->name, 30, ' (...)') }}
-                                                    <div class="table-links">
-                                                        <a href="{{ route('products.show', $product->id) }}">View</a>
-                                                        <div class="bullet"></div>
-                                                        <a href="{{ route('products.edit', $product->id) }}">Edit</a>
-                                                        <div class="bullet"></div>
-                                                        <a href="#"
-                                                            onclick="event.preventDefault(); document.getElementById('delete-product-{{ $product->id }}').submit()"
-                                                            class="text-danger">Trash</a>
-                                                        <form action="{{ route('products.destroy', $product->id) }}"
-                                                            method="POST" class="d-none"
-                                                            id="delete-product-{{ $product->id }}">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    {{ ucfirst($product->category) }}
-                                                </td>
-                                                <td>
-                                                    {{ $product->stock }}
-                                                </td>
-                                                <td>
-                                                    Rp {{ number_format($product->price, 0, ',', '.') }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </table>
-                                </div>
-                                {{ $products->withQueryString()->links() }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
     </div>
 @endsection
-
-@push('scripts')
-    <!-- JS Libraies -->
-    <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
-
-    <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/features-posts.js') }}"></script>
-@endpush

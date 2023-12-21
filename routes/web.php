@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,10 @@ use App\Http\Controllers\UserController;
 */
 
 Route::get('/', function () {
-    return view('pages.auth.login');
+    if (!Auth::check()) {
+        return view('pages.auth.login');
+    }
+    return view('pages.dashboard');
 });
 
 Route::middleware(['auth'])->group(function () {

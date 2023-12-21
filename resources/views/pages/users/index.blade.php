@@ -2,139 +2,70 @@
 
 @section('title', 'Users')
 
-@push('style')
-    <!-- CSS Libraries -->
-    <link rel="stylesheet" href="{{ asset('library/selectric/public/selectric.css') }}">
-@endpush
-
 @section('main')
-    <div class="main-content">
-        <section class="section">
-            <div class="section-header">
-                <h1>Users</h1>
-                <div class="section-header-button">
-                    <a href="{{ route('users.create') }}" class="btn btn-primary">Add New</a>
-                </div>
-                <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                    <div class="breadcrumb-item"><a href="#">Users</a></div>
-                    <div class="breadcrumb-item">All Users</div>
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa fa-exclamation-circle me-2"></i>
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    <div class="container-fluid pt-4 px-4">
+        <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="/">Dashboard</a></div>
+            <div class="breadcrumb-item"><a href="{{ route('users.index') }}">Users</a></div>
+            <div class="breadcrumb-item">User List</div>
+        </div>
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="bg-secondary rounded h-100 p-4">
+                    <h6 class="mb-4">User List <button onclick="window.location='{{ route('users.create') }}'"
+                            class="btn btn-outline-primary m-2">
+                            <i class="fas fa-plus me-2"></i>Add New User
+                        </button></h6>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="text-white">
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Phone</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($users as $user)
+                                    <tr>
+                                        <td><a
+                                                href="{{ route('users.show', $user->id) }}">{{ Str::limit($user->name, 30, ' (...)') }}</a>
+                                        </td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->phone }}</td>
+                                        <td>
+                                            <a href='{{ route('users.edit', $user->id) }}'
+                                                class="btn btn-square btn-outline-info m-2">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" data-toggle="modal" data-target="#deleteModal"
+                                                onclick="event.preventDefault(); if (confirm('Are you sure?')) document.getElementById('delete-user-{{ $user->id }}').submit()"
+                                                class="btn btn-square btn-outline-danger m-2">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                            <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                                class="d-none" id="delete-user-{{ $user->id }}">
+                                                @csrf
+                                                @method('DELETE')
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    {{ $users->withQueryString()->links() }}
                 </div>
             </div>
-            <div class="section-body">
-                <h2 class="section-title">Users</h2>
-                <p class="section-lead">
-                    You can manage all users, such as editing, deleting and more.
-                </p>
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card mb-0">
-                            <div class="card-body">
-                                <ul class="nav nav-pills">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" href="#">All <span
-                                                class="badge badge-white">5</span></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">Draft <span
-                                                class="badge badge-primary">1</span></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">Pending <span
-                                                class="badge badge-primary">1</span></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">Trash <span
-                                                class="badge badge-primary">0</span></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible show fade">
-                        <div class="alert-body">
-                            <button class="close" data-dismiss="alert">
-                                <span>&times;</span>
-                            </button>
-                            {{ session('success') }}
-                        </div>
-                    </div>
-                @endif
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>All Users</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="float-right">
-                                    <form method="GET" action={{ route('users.index') }}>
-                                        <div class="input-group">
-                                            <input type="text" value="{{ old('keyword') }}" class="form-control"
-                                                placeholder="Search" name="keyword">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <div class="clearfix mb-3"></div>
-
-                                <div class="table-responsive">
-                                    <table class="table-striped table">
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Phone</th>
-
-                                        </tr>
-                                        @foreach ($users as $user)
-                                            <tr>
-                                                <td>{{ $user->name }}
-                                                    <div class="table-links">
-                                                        <a href="{{ route('users.show', $user->id) }}">View</a>
-                                                        <div class="bullet"></div>
-                                                        <a href="{{ route('users.edit', $user->id) }}">Edit</a>
-                                                        <div class="bullet"></div>
-                                                        <a href="#"
-                                                            onclick="event.preventDefault(); document.getElementById('delete-user-{{ $user->id }}').submit()"
-                                                            class="text-danger">Trash</a>
-                                                        <form action="{{ route('users.destroy', $user->id) }}"
-                                                            method="POST" class="d-none"
-                                                            id="delete-user-{{ $user->id }}">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
-                                                </td>
-                                                <td>
-                                                    {{ $user->phone }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </table>
-                                </div>
-                                {{ $users->links() }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
     </div>
 @endsection
-
-@push('scripts')
-    <!-- JS Libraies -->
-    <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
-
-    <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/features-posts.js') }}"></script>
-@endpush

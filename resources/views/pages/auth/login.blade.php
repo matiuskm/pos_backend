@@ -1,135 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.auth')
 
-<head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Login &mdash; POS Arunika</title>
+@section('title', 'Sign In - POS Arunika')
 
-    <!-- General CSS Files -->
-    <link rel="stylesheet" href="{{ asset('library/bootstrap/dist/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
-        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <!-- CSS Libraries -->
-    <link rel="stylesheet" href="{{ asset('library/bootstrap-social/bootstrap-social.css') }}">
-
-    <!-- Template CSS -->
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/components.css') }}">
-</head>
-
-<body>
-    <div id="app">
-        <section class="section">
-            <div class="d-flex align-items-stretch flex-wrap">
-                <div class="col-lg-4 col-md-6 col-12 order-lg-1 min-vh-100 order-2 bg-white">
-                    <div class="m-3 p-4">
-                        <img src="{{ asset('img/stisla-fill.svg') }}" alt="logo" width="80"
-                            class="shadow-light rounded-circle mb-5 mt-2">
-                        <h4 class="text-dark font-weight-normal">Welcome to <span class="font-weight-bold">POS
-                                Arunika</span>
-                        </h4>
-                        <p class="text-muted">Before you get started, you must login or register if you don't already
-                            have an account.</p>
-                        <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate="">
-                            @csrf
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input id="email" type="email"
-                                    class="form-control @error('email') is-invalid
-                                    @enderror"
-                                    value="{{ old('email') }}" tabindex="1" name="email" autofocus>
-                                @error('email')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <div class="d-block">
-                                    <label for="password" class="control-label">Password</label>
-                                </div>
-                                <input id="password" type="password"
-                                    class="form-control @error('password') is-invalid
-                                    @enderror"
-                                    name="password" tabindex="2" required>
-                                @error('password')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" name="remember" class="custom-control-input" tabindex="3"
-                                        id="remember-me">
-                                    <label class="custom-control-label" for="remember-me">Remember Me</label>
-                                </div>
-                            </div>
-
-                            <div class="form-group text-right">
-                                <a href="auth-forgot-password.html" class="float-left mt-3">
-                                    Forgot Password?
-                                </a>
-                                <button type="submit" class="btn btn-primary btn-lg btn-icon icon-right"
-                                    tabindex="4">
-                                    Login
-                                </button>
-                            </div>
-
-                            <div class="mt-5 text-center">
-                                Don't have an account? <a href="{{ route('register') }}">Create new one</a>
-                            </div>
-                        </form>
-
-                        <div class="text-small mt-5 text-center">
-                            Copyright &copy; {{ date('Y') }} Arunika Digital
-                            <div class="mt-2">
-                                <a href="#">Privacy Policy</a>
-                                <div class="bullet"></div>
-                                <a href="#">Terms of Service</a>
-                            </div>
-                        </div>
+@section('main')
+    <!-- Sign In Start -->
+    <div class="container-fluid">
+        <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+            <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <a href="index.html" class="">
+                            <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>POS Arunika</h3>
+                        </a>
+                        <h3>Sign In</h3>
                     </div>
-                </div>
-                <div class="col-lg-8 col-12 order-lg-2 min-vh-100 background-walk-y position-relative overlay-gradient-bottom order-1"
-                    data-background="{{ asset('img/unsplash/login-bg.jpg') }}">
-                    <div class="absolute-bottom-left index-2">
-                        <div class="text-light p-5 pb-2">
-                            <div class="mb-5 pb-3">
-                                <h1 class="display-4 font-weight-bold mb-2">Good Morning</h1>
-                                <h5 class="font-weight-normal text-muted-transparent">Bali, Indonesia</h5>
-                            </div>
-                            Photo by <a class="text-light bb" target="_blank"
-                                href="https://unsplash.com/photos/a8lTjWJJgLA">Justin Kauffman</a> on <a
-                                class="text-light bb" target="_blank" href="https://unsplash.com">Unsplash</a>
+                    <form method="POST" action="{{ route('login') }}">
+                        @csrf
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                id="floatingInput" placeholder="name@example.com" name="email">
+                            <label for="floatingInput">Email address</label>
+                            @error('email')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
-                    </div>
+                        <div class="form-floating mb-4">
+                            <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                id="floatingPassword" placeholder="Password" name="password">
+                            <label for="floatingPassword">Password</label>
+                            @error('password')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                            </div>
+                            <a href="">Forgot Password</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign In</button>
+                    </form>
+                    <p class="text-center mb-0">Don't have an Account? <a href="{{ route('register') }}">Sign Up</a></p>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
-
-    <!-- General JS Scripts -->
-    <script src="{{ asset('library/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ asset('library/popper.js/dist/umd/popper.js') }}"></script>
-    <script src="{{ asset('library/tooltip.js/dist/umd/tooltip.js') }}"></script>
-    <script src="{{ asset('library/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('library/jquery.nicescroll/dist/jquery.nicescroll.min.js') }}"></script>
-    <script src="{{ asset('library/moment/min/moment.min.js') }}"></script>
-    <script src="{{ asset('js/stisla.js') }}"></script>
-
-    <!-- JS Libraies -->
-
-    <!-- Page Specific JS File -->
-
-    <!-- Template JS File -->
-    <script src="{{ asset('js/scripts.js') }}"></script>
-    <script src="{{ asset('js/custom.js') }}"></script>
-</body>
-
-</html>
+    <!-- Sign In End -->
+@endsection

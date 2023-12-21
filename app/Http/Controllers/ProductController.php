@@ -40,7 +40,19 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        Product::create($request->validated());
+        $data = $request->validated();
+        $filename = time() . '.' . $request->image->extension();
+        $request->image->storeAs('public/products', $filename);
+
+        $product = new Product();
+        $product->name = $data['name'];
+        $product->description = $data['description'] ?? '';
+        $product->price = (int) $data['price'];
+        $product->stock = (int) $data['stock'];
+        $product->category = $data['category'];
+        $product->image = $filename;
+        $product->save();
+
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
@@ -69,7 +81,11 @@ class ProductController extends Controller
      */
     public function update(StoreProductRequest $request, Product $product)
     {
-        $product->update($request->validated());
+        $data = $request->validated();
+        $filename = time() . '.' . $request->image->extension();
+        $request->image->storeAs('public/products', $filename);
+        $data['image'] = $filename;
+        $product->update($data);
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 

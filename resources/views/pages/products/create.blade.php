@@ -2,166 +2,77 @@
 
 @section('title', 'Add New Product')
 
-@push('style')
-    <!-- CSS Libraries -->
-    <link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.css') }}">
-    <link rel="stylesheet" href="{{ asset('library/codemirror/lib/codemirror.css') }}">
-    <link rel="stylesheet" href="{{ asset('library/codemirror/theme/duotone-dark.css') }}">
-    <link rel="stylesheet" href="{{ asset('library/selectric/public/selectric.css') }}">
-@endpush
-
 @section('main')
-    <div class="main-content">
-        <section class="section">
-            <div class="section-header">
-                <h1>Add New User</h1>
-                <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('products.index') }}">Products</a></div>
-                    <div class="breadcrumb-item">Add New Product</div>
-                </div>
-            </div>
-
-            <div class="section-body">
-                <h2 class="section-title">New Product</h2>
-                <p class="section-lead">Please fill all required data.</p>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12 d-flex align-items-center justify-content-center">
-                            <div class="card col-lg-6 col-sm-12">
-                                <div class="card-header">
-                                    <h4>Product Data</h4>
-                                </div>
-                                <form method="POST" action="{{ route('products.store') }}">
-                                    @csrf
-                                    <div class="card-body">
-                                        <div class="form-group row mb-4">
-                                            <label
-                                                class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Name</label>
-                                            <div class="col-sm-12 col-md-9">
-                                                <input type="text" placeholder="Product Name" tabindex="1" autofocus
-                                                    class="form-control @error('name') is-invalid
-                                            @enderror"
-                                                    value="{{ old('name') }}" name="name">
-
-                                                @error('name')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mb-4">
-                                            <label
-                                                class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Description</label>
-                                            <div class="col-sm-12 col-md-9">
-
-                                                <textarea type="text" placeholder="Product Description" tabindex="2" autofocus
-                                                    class="form-control summernote-simple @error('description') is-invalid @enderror" value="{{ old('description') }}"
-                                                    name="description">{{ old('description') }}</textarea>
-
-                                                @error('description')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mb-4">
-                                            <label
-                                                class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Stock</label>
-                                            <div class="col-sm-12 col-md-9">
-                                                <input type="text" placeholder="Stock" tabindex="3" autofocus
-                                                    class="form-control @error('stock') is-invalid @enderror"
-                                                    value="{{ old('stock') }}" name="stock">
-
-                                                @error('stock')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mb-4">
-                                            <label
-                                                class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Price</label>
-                                            <div class="input-group col-sm-12 col-md-9">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        Rp
-                                                    </div>
-                                                </div>
-                                                <input type="text" name="price"
-                                                    class="form-control currency @error('price') is-invalid @enderror"
-                                                    placeholder="Price" tabindex="4" autofocus value={{ old('price') }}>
-                                                @error('price')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mb-4">
-                                            <label
-                                                class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Image</label>
-                                            <div class="col-sm-12 col-md-9">
-                                                <input type="text" placeholder="Image URL" tabindex="5" autofocus
-                                                    class="form-control @error('image') is-invalid @enderror"
-                                                    value="{{ old('image') }}" name="image">
-
-                                                @error('image')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-
-                                        <div class="form-group row mb-6">
-                                            <label class="form-label">Category</label>
-                                            <div class="selectgroup w-100">
-                                                <label class="selectgroup-item">
-                                                    <input type="radio" name="category" value="food"
-                                                        class="selectgroup-input">
-                                                    <span class="selectgroup-button">Food</span>
-                                                </label>
-                                                <label class="selectgroup-item">
-                                                    <input type="radio" name="category" value="drink"
-                                                        class="selectgroup-input">
-                                                    <span class="selectgroup-button">Drink</span>
-                                                </label>
-                                                <label class="selectgroup-item">
-                                                    <input type="radio" name="category" value="snack"
-                                                        class="selectgroup-input" checked="">
-                                                    <span class="selectgroup-button">Snack</span>
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row mb-6 justify-content-center">
-
-                                            <div class="col-sm-12 col-md-7">
-                                                <button class="btn btn-block btn-primary">Save</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+<div class="container-fluid pt-4 px-4">
+    <div class="breadcrumb">
+        <div class="breadcrumb-item"><a href="/">Dashboard</a></div>
+        <div class="breadcrumb-item"><a href="{{ route('products.index') }}">Products</a></div>
+        <div class="breadcrumb-item">Add New Product</div>
     </div>
+    <div class="col-sm-12 col-xl-6 mx-auto">
+        <div class="bg-secondary rounded h-100 p-4">
+            <h6 class="mb-4">New Product</h6>
+            <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
+                @csrf
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control @error('name') is-invalid
+                    @enderror"
+                        name="name" value="{{ old('name') }}" id="name" placeholder="Product Name">
+                    <label for="name">Product name</label>
+                    @error('name')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Put description here" id="description" name="description"
+                        style="height: 150px;"></textarea>
+                    <label for="description">Description</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control @error('stock') is-invalid
+                    @enderror"
+                        name="stock" value="{{ old('stock') }}" id="stock" placeholder="Product Stock">
+                    <label for="stock">Product stock</label>
+                    @error('stock')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control @error('price') is-invalid
+                    @enderror"
+                        name="price" value="{{ old('price') }}" id="price" placeholder="Product Price">
+                    <label for="price">Product price</label>
+                    @error('price')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="category" name="category" aria-label="Category">
+                        <option value="food">Food</option>
+                        <option value="drink">Drink</option>
+                        <option value="snack" selected>Snack</option>
+                    </select>
+                    <label for="category">Category</label>
+                </div>
+                <div class="mb-3">
+                    <label for="formFileSm" class="form-label">Image</label>
+                    <input class="form-control form-control-sm bg-dark @error('image') is-invalid @enderror" id="formFileSm"
+                        type="file" name="image">
+                    @error('image')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
-
-@push('scripts')
-    <!-- JS Libraies -->
-    <script src="{{ asset('library/summernote/dist/summernote-bs4.js') }}"></script>
-    <script src="{{ asset('library/codemirror/lib/codemirror.js') }}"></script>
-    <script src="{{ asset('library/codemirror/mode/javascript/javascript.js') }}"></script>
-    <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
-
-    <!-- Page Specific JS File -->
-@endpush
