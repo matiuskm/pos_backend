@@ -12,8 +12,9 @@
         <div class="col-sm-12 col-xl-6 mx-auto">
             <div class="bg-secondary rounded h-100 p-4">
                 <h6 class="mb-4">Editing {{ $product->name }}</h6>
-                <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('products.update', $product) }}" enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
                     <div class="form-floating mb-3">
                         @if ($product->image)
                             <img src="{{ asset('storage/products/' . $product->image) }}" data-toggle="tooltip"
