@@ -41,7 +41,7 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $data = $request->validated();
-        $filename = time() . '.' . $request->image->extension();
+        $filename = \Illuminate\Support\Str::uuid() . '.' . $request->image->extension();
         $request->image->storeAs('public/products', $filename);
 
         $product = new Product();
@@ -82,7 +82,7 @@ class ProductController extends Controller
     public function update(StoreProductRequest $request, Product $product)
     {
         $data = $request->validated();
-        $filename = time() . '.' . $request->image->extension();
+        $filename = \Illuminate\Support\Str::uuid() . '.' . $request->image->extension();
         $request->image->storeAs('public/products', $filename);
         $data['image'] = $filename;
         $product->update($data);
